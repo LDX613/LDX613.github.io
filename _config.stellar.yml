@@ -187,3 +187,56 @@ canonical:
   originalHost: LDX613.github.io
   officialHosts:
     - localhost
+
+
+######## 全局外观样式 ########
+# 关于 site.background-image 的坑：
+#   1) 主题在 layout/layout.ejs 里用 `if (theme.style.site?.['background-image'])` 判断是否生成 sitebg div
+#      ——字符串必须非空，否则元素根本不生成；
+#   2) 但 stylus 的 convert() 对含逗号的字符串会截断到第一个逗号，linear-gradient 没法直接填；
+#   3) 解决：这里填一个**不含逗号**的占位值（让主题生成元素），真正的渐变在下方 inject.head 里用 !important 覆盖。
+# 最佳占位是 'initial'（合法 CSS 值、且无逗号）——这样未覆盖前默认透出主题的 --background 变量。
+style:
+  site:
+    background-image: initial
+  leftbar:
+    background-color-light: hsla(280, 50%, 98%, 1)
+    background-color-dark: hsla(280, 30%, 22%, 1)
+    background-opacity: 0.6
+    blur-px: 12px
+
+
+######## 自定义 head 注入 ########
+# Stellar 主题会在 <head> 末尾依次注入站点 config.inject.head 和主题 theme.inject.head。
+# 这里给 body > .sitebg（主题的全屏背景容器）写两套渐变：
+#   - light：浅紫 → 樱花粉 → 天蓝（甜豆清新）
+#   - dark ：同色系的深紫 → 深粉 → 深蓝（保证夜间模式也协调）
+# 同时把 siteblur 层的 backdrop-filter 调到 0，避免把渐变糊成一片。
+inject:
+  head: |
+    <style>
+      body > .sitebg {
+        background-image: linear-gradient(135deg, #e9d5ff 0%, #fce7f3 45%, #bae6fd 100%) !important;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+      /* 让渐变清晰：把 siteblur 的滤镜去掉（默认 100px blur + saturate 会让渐变糊一片） */
+      body > .sitebg > .siteblur {
+        --blur-px: 0px !important;
+        --blur-sat: 100% !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: transparent !important;
+      }
+
+      /* 暗色模式：同色系深色版渐变 */
+      :root[data-theme="dark"] body > .sitebg {
+        background-image: linear-gradient(135deg, #2e1065 0%, #500724 45%, #0c4a6e 100%) !important;
+      }
+      /* 系统暗色但用户未显式选择 data-theme */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) body > .sitebg {
+          background-image: linear-gradient(135deg, #2e1065 0%, #500724 45%, #0c4a6e 100%) !important;
+        }
+      }
+    </style>
