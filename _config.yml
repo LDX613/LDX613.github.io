@@ -24,7 +24,7 @@ timezone: 'Asia/Shanghai'
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 ## 这个地址会被用于生成 RSS、canonical 链接和站内绝对链接，
 ## 部署前必须改成真实地址，否则部署后站内链接会指向错误域名。
-url: https://LDX613.github.io
+url: https://ldx613.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:

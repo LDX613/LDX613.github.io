@@ -184,7 +184,7 @@ comments:
 ######## SEO ########
 # 填写后，非源站地址不会被搜索引擎收录，且访问时提示克隆站
 canonical:
-  originalHost: LDX613.github.io
+  originalHost: ldx613.github.io
   officialHosts:
     - localhost
 
