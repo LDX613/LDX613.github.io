@@ -24,9 +24,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
-          # 关键：主题以 git submodule 形式存在于 themes/stellar，
-          # 不加 submodules: recursive 时构建机上主题目录是空的，必然构建失败。
-          submodules: recursive
+          # 主题已合并进父仓库（themes/stellar/ 是普通目录），无需 submodules 配置
           fetch-depth: 0
 
       - name: 安装 pnpm
