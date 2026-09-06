@@ -1,0 +1,67 @@
+name: 部署到 GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  # 允许在仓库的 Actions 页面手动点击运行
+  workflow_dispatch:
+
+# 排队部署，避免多个任务互相覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          # 关键：主题以 git submodule 形式存在于 themes/stellar，
+          # 不加 submodules: recursive 时构建机上主题目录是空的，必然构建失败。
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        # 说明：package.json 与 pnpm-lock.yaml 尚未同步时（例如刚删掉
+        # hexo-theme-landscape 依赖），--frozen-lockfile 会直接失败。
+        # 在本地执行一次 pnpm install 让 lockfile 同步后，
+        # 建议把这里改回 pnpm install --frozen-lockfile，构建更可复现。
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建静态文件
+        run: pnpm run build
+
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

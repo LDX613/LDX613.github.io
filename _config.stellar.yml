@@ -1,0 +1,189 @@
+# =============================================================
+# Stellar 主题配置
+# -------------------------------------------------------------
+# 主题版本：1.44.0（与 themes/stellar/package.json 保持一致）
+# 官方文档：https://xaoxuu.com/wiki/stellar/
+#
+# 重要提醒：
+# 文档站目前展示的是「尚未发布」的下一代配置字段
+# （site.brand / appearance / topbar / leftbar / rightbar /
+#   profiles / extensions.search 等），本地 1.44.0 并不识别，
+# 写在下面会被静默忽略——不报错，但也不生效。
+# 本文件统一使用 1.44.0 实际读取的字段：logo / menubar / site_tree。
+#
+# 升级主题后若发现新字段，请对照 CHANGELOG.md 的
+# 「升级注意（配置变更与破坏性改动）」一节做迁移。
+# =============================================================
+
+
+######## 侧边栏品牌区 ########
+# 语法：[显示内容](点击跳到哪里)
+# {config.xxx} 会替换为站点根目录 _config.yml 中同名字段的值
+# subtitle 用竖线分隔可实现「鼠标悬停切换文字」效果
+logo:
+  avatar: '[{config.avatar}](/about/)'
+  title: '[{config.title}](/)' 
+  subtitle: '{config.subtitle}'
+
+
+######## 侧边栏导航菜单 ########
+# id     —— 与页面的 menu_id 对应，决定访问时哪一项高亮
+# theme  —— 高亮时的颜色
+# icon   —— 图标，只能用主题已定义的键（见 themes/stellar/_data/icons.yml）
+# url    —— 跳转地址，支持相对路径和绝对路径
+#
+# 已知行为：分类页 / 标签页 / 归档页的 menu_id 被主题模板硬编码为 'post'
+# （见 layout/categories.ejs、tags.ejs、archive.ejs），无法通过配置覆盖。
+# 所以访问这些页面时高亮的是「博客」——它们是博客的子页面，高亮父级是合理的。
+# 想要这些入口精确高亮，需要改主题模板，不建议。
+menubar:
+  items:
+    - id: post
+      theme: '#1BCDFC'
+      icon: default:documents
+      title: 博客
+      url: /
+    - id: categories
+      theme: '#3DC550'
+      icon: default:category
+      title: 分类
+      url: /categories/
+    - id: tags
+      theme: '#FA6400'
+      icon: default:hashtag
+      title: 标签
+      url: /tags/
+    - id: archives
+      theme: '#F44336'
+      icon: default:calendar
+      title: 归档
+      url: /archives/
+    - id: about
+      theme: '#7F77DD'
+      icon: example:planet
+      title: 关于
+      url: /about/
+
+
+######## 站点结构树 ########
+# 决定每类页面用哪套侧边栏小部件。
+# 可用小部件（themes/stellar/_data/widgets.yml）：
+#   recent 最近文章 / tagcloud 标签云 / author 作者 / ghuser GitHub 用户
+#   ghrepo GitHub 仓库（需页面配置 repo 才显示）/ toc 目录（仅右栏）
+#   related 相关文章（仅 wiki 与专栏生效，普通文章渲染为空）
+# 注意：不要用 welcome —— 主题虽然在默认配置里写了它，
+# 但 _data/widgets.yml 和模板都不存在，会被静默跳过。
+site_tree:
+  home:
+    leftbar: recent, tagcloud
+    rightbar:
+  index_blog:
+    leftbar: recent, tagcloud
+    rightbar:
+  post:
+    menu_id: post
+    leftbar: recent
+    rightbar: toc
+  page:
+    leftbar: recent
+    rightbar: toc
+  error_page:
+    menu_id: post
+    leftbar: recent
+    rightbar:
+
+
+######## 文章与外观 ########
+article:
+  # 文章布局风格：tech 紧凑（技术类）/ story 宽松（图文类）
+  type: tech
+  # 段落首行缩进两个字符，中文长文可开
+  indent: false
+  # 文章卡片样式：hero 全图封面卡片 / classic 普通卡片
+  card_style: hero
+  # 文章卡片封面宽高比
+  cover_ratio: 2
+  # 文章页顶部横幅宽高比
+  banner_ratio: 2.5
+  # 未填写 excerpt/description 时自动截取的摘要字数
+  auto_excerpt: 128
+  # 文章页显示字数与预计阅读时长
+  reading_time: true
+  # 文章卡片上显示标签（最多 5 个）
+  card_tags: true
+  # 文章末尾显示本文标签
+  tags: true
+  # 文章许可声明
+  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
+  # 分享按钮，可选 wechat / weibo / email / link
+  share: [wechat, weibo, link]
+
+
+######## 页脚 ########
+footer:
+  # 左栏底部的社交按钮，按书写顺序排列
+  # spacer 是弹性占位项，会把它后面的按钮推到同一行右侧
+  social:
+    github:
+      icon: default:github
+      title: GitHub
+      url: https://github.com/LDX613
+    spacer:
+    rss:
+      icon: default:rss
+      title: RSS
+      url: /atom.xml
+  # 主内容区页脚的站点地图
+  sitemap:
+    - title: 博客
+      items:
+        - '[近期发布](/)'
+        - '[分类](/categories/)'
+        - '[标签](/tags/)'
+        - '[归档](/archives/)'
+    - title: 关于
+      items:
+        - '[关于我](/about/)'
+  content: |
+    本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+    本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+
+
+######## 搜索 ########
+search:
+  service: local_search
+  local_search:
+    field: all          # post 只搜文章 / page 只搜页面 / all 全部
+    content: true       # 是否搜索正文
+    lazy_load: true     # 首次聚焦搜索框才加载索引
+
+
+######## 评论 ########
+# 三个 giscus id 来自 https://giscus.app/zh-CN，绑定到 LDX613/LDX613.github.io 仓库的 Discussions
+# 想要修改配置，重新访问上述页面生成新片段替换即可
+comments:
+  service: giscus
+  comment_title: 快来参与讨论吧~
+  giscus:
+    src: https://giscus.app/client.js
+    data-repo: LDX613/LDX613.github.io
+    data-repo-id: R_kgDOUOGCmg
+    data-category: Announcements
+    data-category-id: DIC_kwDOUOGCms4DE22o
+    data-mapping: pathname
+    data-strict: 0
+    data-reactions-enabled: 1
+    data-emit-metadata: 0
+    data-input-position: bottom
+    data-theme: preferred_color_scheme
+    data-lang: zh-CN
+    data-loading: lazy
+    crossorigin: anonymous
+
+
+######## SEO ########
+# 填写后，非源站地址不会被搜索引擎收录，且访问时提示克隆站
+canonical:
+  originalHost: LDX613.github.io
+  officialHosts:
+    - localhost
