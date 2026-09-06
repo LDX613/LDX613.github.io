@@ -14,7 +14,8 @@ author: L.D.X.
 # 头像：主题侧边栏品牌区会读取它（见 _config.stellar.yml 的 logo.avatar）
 # 图片放在 source/images/ 下，路径从 / 开始写
 avatar: /images/avatar.jpg
-# 网站图标：把 favicon.ico 放进 source/ 目录即可，无需在此配置
+# 网站图标：放在 source/ 根目录下，构建后会自动复制到站点根目录
+favicon: /favicon.ico
 language: 
   - zh-CN
   - en
