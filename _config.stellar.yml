@@ -39,27 +39,27 @@ logo:
 menubar:
   items:
     - id: post
-      theme: '#1BCDFC'
+      theme: '#9BC76A'
       icon: default:documents
       title: 博客
       url: /
     - id: categories
-      theme: '#3DC550'
+      theme: '#7CB342'
       icon: default:category
       title: 分类
       url: /categories/
     - id: tags
-      theme: '#FA6400'
+      theme: '#5DADE2'
       icon: default:hashtag
       title: 标签
       url: /tags/
     - id: archives
-      theme: '#F44336'
+      theme: '#F4D03F'
       icon: default:calendar
       title: 归档
       url: /archives/
     - id: about
-      theme: '#7F77DD'
+      theme: '#AED581'
       icon: example:planet
       title: 关于
       url: /about/
@@ -200,23 +200,24 @@ style:
   site:
     background-image: initial
   leftbar:
-    background-color-light: hsla(280, 50%, 98%, 1)
-    background-color-dark: hsla(280, 30%, 22%, 1)
+    # 与全局渐变协调的淡绿/浅青侧边栏底色
+    background-color-light: hsla(95, 45%, 97%, 1)
+    background-color-dark: hsla(120, 18%, 16%, 1)
     background-opacity: 0.6
     blur-px: 12px
 
 
 ######## 自定义 head 注入 ########
 # Stellar 主题会在 <head> 末尾依次注入站点 config.inject.head 和主题 theme.inject.head。
-# 这里给 body > .sitebg（主题的全屏背景容器）写两套渐变：
-#   - light：浅紫 → 樱花粉 → 天蓝（甜豆清新）
-#   - dark ：同色系的深紫 → 深粉 → 深蓝（保证夜间模式也协调）
+# 这里给 body > .sitebg（主题的全屏背景容器）写两套渐变，颜色来自用户指定的四色搭配：
+#   - light：嫩芽绿 #ECF7E1 → 浅草绿 #D3E8B7 → 浅天蓝 #CDE7FA → 鹅黄 #FFF4B6
+#   - dark ：对应深色调，保证夜间模式也协调
 # 同时把 siteblur 层的 backdrop-filter 调到 0，避免把渐变糊成一片。
 inject:
   head: |
     <style>
       body > .sitebg {
-        background-image: linear-gradient(135deg, #e9d5ff 0%, #fce7f3 45%, #bae6fd 100%) !important;
+        background-image: linear-gradient(135deg, #ECF7E1 0%, #D3E8B7 25%, #CDE7FA 60%, #FFF4B6 100%) !important;
         background-attachment: fixed;
         background-size: cover;
       }
@@ -229,14 +230,14 @@ inject:
         background-color: transparent !important;
       }
 
-      /* 暗色模式：同色系深色版渐变 */
+      /* 暗色模式：四色对应的深色版渐变 */
       :root[data-theme="dark"] body > .sitebg {
-        background-image: linear-gradient(135deg, #2e1065 0%, #500724 45%, #0c4a6e 100%) !important;
+        background-image: linear-gradient(135deg, #1a2e1a 0%, #2d4a2d 25%, #1e3a4f 60%, #3d3310 100%) !important;
       }
       /* 系统暗色但用户未显式选择 data-theme */
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme]) body > .sitebg {
-          background-image: linear-gradient(135deg, #2e1065 0%, #500724 45%, #0c4a6e 100%) !important;
+          background-image: linear-gradient(135deg, #1a2e1a 0%, #2d4a2d 25%, #1e3a4f 60%, #3d3310 100%) !important;
         }
       }
     </style>
