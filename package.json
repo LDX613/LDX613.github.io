@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "cheerio": "^1.2.0",
-    "glob": "^13.0.6",
+    "glob": "^14.0.4",
     "hexo": "^8.0.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
